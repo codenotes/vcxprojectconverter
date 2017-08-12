@@ -1,6 +1,7 @@
 from xmltodict import *
 
-s="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
+win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
+androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
 def load(s):
     with open(s) as fd:        doc = xmltodict.parse(fd.read())
@@ -11,7 +12,7 @@ def save(doc, fname):
         xmltodict.unparse(doc,fd2,pretty=True)
 
 
-doc['Project']['ItemDefinitionGroup'][1].items()[1][1]
+
 
 #xmltodict.unparse
 
@@ -59,3 +60,32 @@ doc['Project']['PropertyGroup']
 #>>> doc['Project']['PropertyGroup'][0]['ProjectGuid']
 u'{A3A3C9C1-C0F3-4CF0-B1F7-B9279CAA1FC7}'
 
+#>>> doc['Project']['ItemGroup'][0]['ProjectConfiguration'][0]
+OrderedDict([(u'@Include', u'Debug|Win32'), (u'Configuration', u'Debug'), (u'Platform', u'Win32')])
+#>>> doc['Project']['ItemGroup'][0]['ProjectConfiguration'][1]
+OrderedDict([(u'@Include', u'Release|Win32'), (u'Configuration', u'Release'), (u'Platform', u'Win32')])
+
+#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][0]['@Include']
+u'Debug|Win32'
+#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][1]['@Include']
+u'Release|Win32'
+#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][2]['@Include']
+u'Debug|x64'
+#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][3]['@Include']
+u'Release|x64'
+
+def getProjectTypes(lib):
+    configs=lib['Project']['ItemGroup'][0]['ProjectConfiguration']
+    l=[]
+    for x in configs:
+        l.append( x['@Include'])
+    return l
+
+#eg, getPreProc(doc,'Debug|Win32')
+def getPreProc(lib,include):
+    defs=doc['Project']['ItemDefinitionGroup']
+    d={}
+    for x in defs:
+        d[ x['@Condition'].split("==")[1][1:-1] ]= x['ClCompile']['PreprocessorDefinitions']
+    return d
+    

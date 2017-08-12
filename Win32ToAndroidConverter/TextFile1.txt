@@ -261,6 +261,7 @@
 
 
   -----------------------------
+  sed 's/##test##/boob/' test.txt>>test2.txt
 
   NOTES: an itemgroup with no field attributes is the actual file-list itemgroup
 
