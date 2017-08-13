@@ -5,14 +5,66 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Win32ToAndroidConverter", "Win32ToAndroidConverter\Win32ToAndroidConverter.pyproj", "{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibrary1Android", "StaticLibrary1Android\StaticLibrary1Android.vcxproj", "{CDD5A045-5710-4BE9-946E-17B34E6B705D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibrary1Win32", "StaticLibrary1Win32\StaticLibrary1Win32.vcxproj", "{D163C6D6-5720-4F84-A6F8-2D9AD131F640}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Release|x64.ActiveCfg = Release|Any CPU
+		{6F9BDF2B-022F-4FF5-B8F0-38C202D49236}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|ARM.ActiveCfg = Debug|ARM
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|ARM.Build.0 = Debug|ARM
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|ARM64.Build.0 = Debug|ARM64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|x64.ActiveCfg = Debug|x64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|x64.Build.0 = Debug|x64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|x86.ActiveCfg = Debug|x86
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Debug|x86.Build.0 = Debug|x86
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|Any CPU.ActiveCfg = Release|x86
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|ARM.ActiveCfg = Release|ARM
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|ARM.Build.0 = Release|ARM
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|ARM64.ActiveCfg = Release|ARM64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|ARM64.Build.0 = Release|ARM64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|x64.ActiveCfg = Release|x64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|x64.Build.0 = Release|x64
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|x86.ActiveCfg = Release|x86
+		{CDD5A045-5710-4BE9-946E-17B34E6B705D}.Release|x86.Build.0 = Release|x86
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|ARM.ActiveCfg = Debug|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|x64.ActiveCfg = Debug|x64
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|x64.Build.0 = Debug|x64
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|x86.ActiveCfg = Debug|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Debug|x86.Build.0 = Debug|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|ARM.ActiveCfg = Release|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|ARM64.ActiveCfg = Release|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|x64.ActiveCfg = Release|x64
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|x64.Build.0 = Release|x64
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|x86.ActiveCfg = Release|Win32
+		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

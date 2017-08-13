@@ -1,17 +1,23 @@
-from xmltodict import *
+import xmltodict
 
-win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
-androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
+#win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
+#androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
+
+
+win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
+androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
 
 def load(s):
-    with open(s) as fd:        doc = xmltodict.parse(fd.read())
+    with open(s) as fd:
+        doc = xmltodict.parse(fd.read())
         return doc
 
 def save(doc, fname):
     with open(fname,"w") as fd2:
         xmltodict.unparse(doc,fd2,pretty=True)
 
-
+w=load(win32proj)
+a=load(androidproj)
 
 
 #xmltodict.unparse
@@ -88,4 +94,57 @@ def getPreProc(lib,include):
     for x in defs:
         d[ x['@Condition'].split("==")[1][1:-1] ]= x['ClCompile']['PreprocessorDefinitions']
     return d
-    
+
+def getPreProc(lib,target):
+    defs=lib['Project']['ItemDefinitionGroup']
+    for x in defs:
+        if  x['@Condition'].split("==")[1][1:-1]==target:
+            return x['ClCompile']['PreprocessorDefinitions']
+
+def getIncludes(lib,target):
+    defs=lib['Project']['ItemDefinitionGroup']
+    for x in defs:
+        if  x['@Condition'].split("==")[1][1:-1]==target:
+            return x['ClCompile']['AdditionalIncludeDirectories']
+
+
+t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"    
+t=load(t)
+t['Project']['ItemGroup'][2]
+
+def getSourceFiles(lib):
+    l=lib['Project']['ItemGroup'][1]['ClCompile']
+    ll=[]
+    for x in l:
+        ll.append(x['@Include'])
+    return ll       
+
+def addFiles(lib,files):
+    for x in lib:
+        for f in files:
+            lib['Project']['ItemGroup'][1]['ClCompile'].append( OrderedDict([(u'@Include', f)]) )
+
+
+def setPreProc(lib, define):
+    lib['Project']['ItemDefinitionGroup'][3]['ClCompile']['PreprocessorDefinitions']
+
+#def setInclude(lib, define):
+#    s="'$(Configuration)|$(Platform)'=='%s'"%define
+#    lib['Project']['ItemDefinitionGroup'][3]['ClCompile']['AdditionalIncludeDirectories']
+
+
+#t['Project']['ItemGroup'][1]['ClCompile'], 2 ordered dictionaries
+#adding file, t['Project']['ItemGroup'][1]['ClCompile'].append( OrderedDict([(u'@Include', u'ThirdFile.cpp')]) )
+
+def setInclude(lib,target,includes):
+    for x in lib['Project']['ItemDefinitionGroup']:
+        s= x['@Condition'].split("==")[1][1:-1]
+        if(s==target):
+            x['ClCompile']['AdditionalIncludeDirectories']=includes
+
+
+def setPreProc(lib,target,pres):
+    for x in lib['Project']['ItemDefinitionGroup']:
+        s= x['@Condition'].split("==")[1][1:-1]
+        if(s==target):
+            x['ClCompile']['PreprocessorDefinitions']=includes

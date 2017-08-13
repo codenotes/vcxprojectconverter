@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project>
+  <SOLibPaths>C:\repos\vcxprojectconverter\x86\Debug\libStaticLibrary1Android.a;C:\NVPACK\android-ndk-r12b\prebuilt\android-x86\gdbserver\gdbserver;C:\NVPACK\android-ndk-r12b\sources\cxx-stl\gnu-libstdc++\4.9\libs\x86\libgnustl_static.a</SOLibPaths>
+  <AndroidLibPaths />
+  <OObjPaths />
+  <Configuration>Debug</Configuration>
+  <Platform>x86</Platform>
+  <AndroidArchitecture>x86</AndroidArchitecture>
+  <!--links to other recipe files-->
+  <RecipeFiles />
+</project>
