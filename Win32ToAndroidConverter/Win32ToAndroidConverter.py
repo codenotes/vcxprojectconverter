@@ -3,7 +3,6 @@ import xmltodict
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
-
 win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
 androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
 
@@ -21,8 +20,6 @@ a=load(androidproj)
 
 
 #xmltodict.unparse
-
-
 #doc['Project']['ItemGroup'][0].items()[1]
 #(u'ProjectConfiguration', [OrderedDict([(u'@Include', u'Debug|Win32'), (u'Configuration', u'Debug'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Release|Win32'), (u'Configuration', u'Release'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Debug|x64'), (u'Configuration', u'Debug'), (u'Platform', u'x64')]), OrderedDict([(u'@Include', u'Release|x64'), (u'Configuration', u'Release'), (u'Platform', u'x64')])])
 #>>> 
@@ -120,9 +117,12 @@ def getSourceFiles(lib):
     return ll       
 
 def addFiles(lib,files):
-    for x in lib:
-        for f in files:
-            lib['Project']['ItemGroup'][1]['ClCompile'].append( OrderedDict([(u'@Include', f)]) )
+    for x in lib['Project']['ItemGroup']:
+        if x.keys()==[u'ClCompile']:
+            for f in files:
+                #lib['Project']['ItemGroup'][1]['ClCompile'].append( OrderedDict([(u'@Include', f)]) )
+                x[u'ClCompile'].append( OrderedDict([(u'@Include', f)]  )  )
+
 
 
 def setPreProc(lib, define):
@@ -148,3 +148,8 @@ def setPreProc(lib,target,pres):
         s= x['@Condition'].split("==")[1][1:-1]
         if(s==target):
             x['ClCompile']['PreprocessorDefinitions']=includes
+
+
+for x in t['Project']['ItemGroup']:
+    if x.keys()==[u'ClCompile']:
+        print x[u'ClCompile']
