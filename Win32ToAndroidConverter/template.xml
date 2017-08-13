@@ -146,7 +146,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>;##PREPROC##</PreprocessorDefinitions>
+      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -164,7 +164,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>;##PREPROC##</PreprocessorDefinitions>
+      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -177,9 +177,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
-    <ClCompile Include="StaticLibrary2android.cpp">
-    </ClCompile>
+    <ClCompile Include="##NO_FILE##" />
+    <ClCompile Include="##NO_FILE2##" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
