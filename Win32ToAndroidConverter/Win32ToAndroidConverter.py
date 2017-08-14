@@ -192,23 +192,34 @@ def addDelimItemToList(source,item,replaceHolder, listType=None):
     #print '$$source:',source,"type:", listType,"item:",item
     l=source.split(";")
 
-    if replaceHolder=='':
-        l.append(item)
-    else:
-        l = [w.replace(replaceHolder, item) for w in l]
+    #if replaceHolder=='':
+    #    l.append(item)
+    #else:
+    #    l = [w.replace(replaceHolder, item) for w in l]
 
     #print "!!!",l,listType
     #print '***',listType,item
     #if we were given something that is exlucded, just send soure back and don't add anything
     if listType=="preprocessor":
-        tmp=[x.split(';') for x in l]
-        chain = itertools.chain(*tmp)
+      #  tmp=[x.split(';') for x in item]
+      #  chain = itertools.chain(*tmp)
       #  print '1***new preproc',l,'remove:',no_transfer_preproc
-        l=set(chain)-set(no_transfer_preproc)
-        print '2***new preproc',l,'remove:',no_transfer_preproc
+      #item comes in ; delimited, so we need to split that
+        item=item.split(";")
+        print '1&&', item
+        item=set(item)-set(no_transfer_preproc)
+        print '2&&', item
+        item=";".join(item)
+        print '3&&', item
     elif listType=="includes":
         l=set(l)-set(no_transfer_includes)
         #print '---new includes',l
+
+    if replaceHolder=='':
+        l.append(item)
+    else:
+        l = [w.replace(replaceHolder, item) for w in l]
+
     
     return ";".join(l)
 
@@ -224,7 +235,7 @@ def setPreProc(lib,target,preproc,  replaceHolder=True):
             pp=x['ClCompile']['PreprocessorDefinitions']
             #print '^^',preproc
             test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor')
-            print '!!test!!',test
+#            print '!!test!!',test
             x['ClCompile']['PreprocessorDefinitions']=test
             
 
