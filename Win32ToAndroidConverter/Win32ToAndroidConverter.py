@@ -4,8 +4,6 @@ from collections import OrderedDict
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
-win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
-androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
 
 def load(s):
     with open(s) as fd:
@@ -16,72 +14,13 @@ def save(doc, fname):
     with open(fname,"w") as fd2:
         xmltodict.unparse(doc,fd2,pretty=True)
 
-w=load(win32proj)
-a=load(androidproj)
-
-
-#xmltodict.unparse
-#doc['Project']['ItemGroup'][0].items()[1]
-#(u'ProjectConfiguration', [OrderedDict([(u'@Include', u'Debug|Win32'), (u'Configuration', u'Debug'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Release|Win32'), (u'Configuration', u'Release'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Debug|x64'), (u'Configuration', u'Debug'), (u'Platform', u'x64')]), OrderedDict([(u'@Include', u'Release|x64'), (u'Configuration', u'Release'), (u'Platform', u'x64')])])
-#>>> 
-
-#>>> doc['Project']['ItemGroup'][2]
-#OrderedDict([(u'ClCompile', OrderedDict([(u'@Include', u'Source.cpp')]))])
-
-#x=doc['Project']['ItemGroup'][2]
-#>>> x[u'ClCompile']
-#OrderedDict([(u'@Include', u'Source.cpp')])
-
-#>>> doc['Project']['ItemGroup'][1]['Text']['@Include']
-#u'ReadMe.txt'
-#>>> 
-
-#>>> x[u'ClCompile'][u'@Include']
-#u'Source.cpp'
-
-#change filename
-#doc['Project']['ItemGroup'][1]['Text']['@Include']='feedme.txt'
-
-#>>> doc['Project'].keys()
-#[u'@DefaultTargets', u'@ToolsVersion', u'@xmlns', u'ItemGroup', u'PropertyGroup', u'Import', u'ImportGroup', u'ItemDefinitionGroup']
-#>>> doc['Project']['ItemGroup']
-#[OrderedDict([(u'@Label', u'ProjectConfigurations'), (u'ProjectConfiguration', [OrderedDict([(u'@Include', u'Debug|Win32'), (u'Configuration', u'Debug'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Release|Win32'), (u'Configuration', u'Release'), (u'Platform', u'Win32')]), OrderedDict([(u'@Include', u'Debug|x64'), (u'Configuration', u'Debug'), (u'Platform', u'x64')]), OrderedDict([(u'@Include', u'Release|x64'), (u'Configuration', u'Release'), (u'Platform', u'x64')])])]), OrderedDict([(u'Text', OrderedDict([(u'@Include', 'feedme.txt')]))]), OrderedDict([(u'ClCompile', OrderedDict([(u'@Include', u'Source.cpp')]))])]
-#>>> 
-
-
-#x=doc['Project']['ItemGroup'][2]
-#x[u'ClCompile'][u'@Include']
-
-#project configurations:
-#doc['Project']['ItemGroup'][0]
-
-#property group
-#doc['Project']['PropertyGroup']
-
-#>>> doc['Project']['PropertyGroup'][0].keys()
-#[u'@Label', u'VCProjectVersion', u'ProjectGuid', u'Keyword', u'RootNamespace', u'WindowsTargetPlatformVersion']
-
-#>>> doc['Project']['PropertyGroup'][0]['ProjectGuid']
-#u'{A3A3C9C1-C0F3-4CF0-B1F7-B9279CAA1FC7}'
-
-#>>> doc['Project']['ItemGroup'][0]['ProjectConfiguration'][0]
-#OrderedDict([(u'@Include', u'Debug|Win32'), (u'Configuration', u'Debug'), (u'Platform', u'Win32')])
-#>>> doc['Project']['ItemGroup'][0]['ProjectConfiguration'][1]
-#OrderedDict([(u'@Include', u'Release|Win32'), (u'Configuration', u'Release'), (u'Platform', u'Win32')])
-
-#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][0]['@Include']
-#u'Debug|Win32'
-#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][1]['@Include']
-#u'Release|Win32'
-#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][2]['@Include']
-#u'Debug|x64'
-#doc['Project']['ItemGroup'][0]['ProjectConfiguration'][3]['@Include']
-#u'Release|x64'
-
+#items not to carry over
 no_transfer_files=['stdafx.cpp']
 no_transfer_includes=['%(AdditionalIncludeDirectories)']
-no_transfer_preproc=['WIN32','NDEBUG','_LIB','_DEBUG','%(PreprocessorDefinitions)']
+no_transfer_preproc=['WIN32','NDEBUG','_LIB','_DEBUG','%(PreprocessorDefinitions)','_USRDLL','_WINDOWS']
 
+#items to insert special
+add_transfer_preproc=['HAVE_MEMMOVE']
 
 def getProjectTypes(lib):
     configs=lib['Project']['ItemGroup'][0]['ProjectConfiguration']
@@ -91,12 +30,12 @@ def getProjectTypes(lib):
     return l
 
 #eg, getPreProc(doc,'Debug|Win32')
-def getPreProc(lib,include):
-    defs=doc['Project']['ItemDefinitionGroup']
-    d={}
-    for x in defs:
-        d[ x['@Condition'].split("==")[1][1:-1] ]= x['ClCompile']['PreprocessorDefinitions']
-    return d
+#def getPreProc(lib,include):
+#    defs=doc['Project']['ItemDefinitionGroup']
+#    d={}
+#    for x in defs:
+#        d[ x['@Condition'].split("==")[1][1:-1] ]= x['ClCompile']['PreprocessorDefinitions']
+#    return d
 
 def getPreProc(lib,target):
     defs=lib['Project']['ItemDefinitionGroup']
@@ -177,15 +116,15 @@ def setPreProc_(lib,target,pres):
             x['ClCompile']['PreprocessorDefinitions']=includes
 
 
-for x in t['Project']['ItemGroup']:
-    if x.keys()==[u'ClCompile']:
-        print x[u'ClCompile']
+#for x in t['Project']['ItemGroup']:
+#    if x.keys()==[u'ClCompile']:
+#        print x[u'ClCompile']
 
 
-for k in w['Project']['ItemGroup']:
-    if u'ClCompile' in k.keys():
-        if 'Include' in x[ u'ClCompile'].keys():
-            print x[ u'ClCompile']['Include']
+#for k in w['Project']['ItemGroup']:
+#    if u'ClCompile' in k.keys():
+#        if 'Include' in x[ u'ClCompile'].keys():
+#            print x[ u'ClCompile']['Include']
 
 
 def addDelimItemToList(source,item,replaceHolder, listType=None):
@@ -206,11 +145,11 @@ def addDelimItemToList(source,item,replaceHolder, listType=None):
       #  print '1***new preproc',l,'remove:',no_transfer_preproc
       #item comes in ; delimited, so we need to split that
         item=item.split(";")
-        print '1&&', item
+    #    print '1&&', item
         item=set(item)-set(no_transfer_preproc)
-        print '2&&', item
+     #   print '2&&', item
         item=";".join(item)
-        print '3&&', item
+      #  print '3&&', item
     elif listType=="includes":
         l=set(l)-set(no_transfer_includes)
         #print '---new includes',l
@@ -315,15 +254,22 @@ def doit(sourceproj, destproj, useMappedTargets=True):
 
 
 #important "AdditionalINcludeDirs may not be present in all projects for win32...so make sure we put that in if it isn't
-def testit(useMap=True):
-    w=load(win32proj)
-    a=load(androidproj)
-    t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"    
-    t=load(t)
+def testit(source, dest, file="c:/temp/t3.xml",useMap=True):
+    w=load(source)
+    t=load(dest)
+  # t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"     
+  #  t=load(t)
 
     doit(w,t,useMap)
-    save(t,"c:/temp/t3.xml")
+    save(t,file)
 
-testit()
+
+win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
+androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
+expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
+template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml" 
+
+if __name__  == "__main__":
+    testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_android.vcxproj')
 
 
