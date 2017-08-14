@@ -1,5 +1,6 @@
 import xmltodict
-
+import itertools
+from collections import OrderedDict
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
@@ -137,7 +138,8 @@ def addFiles(lib,files):
             for f in files:
                 if f in excluded:
                     continue
-                x[u'ClCompile'].extend( [  OrderedDict([(u'@Include', f) ]  )] )  #must be at least 2 in template or extend won't work
+                else:
+                    x[u'ClCompile'].extend( [  OrderedDict([(u'@Include', f) ]  )] )  #must be at least 2 in template or extend won't work
 
     #remove the first 2 fake ##NO_FILE##
     for x in lib['Project']['ItemGroup']:
@@ -150,8 +152,8 @@ def addFiles(lib,files):
 
 
 
-def setPreProc(lib, define):
-    lib['Project']['ItemDefinitionGroup'][3]['ClCompile']['PreprocessorDefinitions']
+#def setPreProc(lib, define):
+#    lib['Project']['ItemDefinitionGroup'][3]['ClCompile']['PreprocessorDefinitions']
 
 #def setInclude(lib, define):
 #    s="'$(Configuration)|$(Platform)'=='%s'"%define
@@ -187,24 +189,27 @@ for k in w['Project']['ItemGroup']:
 
 
 def addDelimItemToList(source,item,replaceHolder, listType=None):
+    #print '$$source:',source,"type:", listType,"item:",item
     l=source.split(";")
-    
-    #if we were given something that is exlucded, just send soure back and don't add anything
-    if listType=="preprocessor":
-            if item in no_transfer_preproc:
-                return source
-    elif listType=="includes":
-            if item in no_transfer_includes:
-                return source
 
     if replaceHolder=='':
         l.append(item)
     else:
         l = [w.replace(replaceHolder, item) for w in l]
 
+    #print "!!!",l,listType
+    #print '***',listType,item
+    #if we were given something that is exlucded, just send soure back and don't add anything
+    if listType=="preprocessor":
+        tmp=[x.split(';') for x in l]
+        chain = itertools.chain(*tmp)
+      #  print '1***new preproc',l,'remove:',no_transfer_preproc
+        l=set(chain)-set(no_transfer_preproc)
+        print '2***new preproc',l,'remove:',no_transfer_preproc
+    elif listType=="includes":
+        l=set(l)-set(no_transfer_includes)
+        #print '---new includes',l
     
-        
-        
     return ";".join(l)
 
 
@@ -217,7 +222,10 @@ def setPreProc(lib,target,preproc,  replaceHolder=True):
         s= x['@Condition'].split("==")[1][1:-1]
         if(s==target):
             pp=x['ClCompile']['PreprocessorDefinitions']
-            x['ClCompile']['PreprocessorDefinitions']=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '')
+            #print '^^',preproc
+            test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor')
+            print '!!test!!',test
+            x['ClCompile']['PreprocessorDefinitions']=test
             
 
 def setInclude(lib,target,incl,replaceHolder=True):
@@ -225,13 +233,13 @@ def setInclude(lib,target,incl,replaceHolder=True):
         s= x['@Condition'].split("==")[1][1:-1]
         if(s==target):
             pp=x['ClCompile']['AdditionalIncludeDirectories']
-            x['ClCompile']['AdditionalIncludeDirectories']=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '')
+            x['ClCompile']['AdditionalIncludeDirectories']=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes')
 
 
 #getPreProc(t,p[1])
 
 #assumption is that there is a 64 release and debug on win32 that we will use as our base
-def doit(sourceproj, destproj, useMappedTargets=False):
+def doit(sourceproj, destproj, useMappedTargets=True):
     st=getProjectTypes(sourceproj)
     sd=getProjectTypes(destproj)
     debMap={ u'Debug|x64': [u'Debug|ARM',  u'Debug|ARM64', u'Debug|x64',  u'Debug|x86'] }
@@ -295,12 +303,8 @@ def doit(sourceproj, destproj, useMappedTargets=False):
     #return [includesForTemplate,preprocForTemplate,filesForTemplate]
 
 
-
-
-
-
 #important "AdditionalINcludeDirs may not be present in all projects for win32...so make sure we put that in if it isn't
-def testit(useMap=False):
+def testit(useMap=True):
     w=load(win32proj)
     a=load(androidproj)
     t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"    
@@ -308,3 +312,7 @@ def testit(useMap=False):
 
     doit(w,t,useMap)
     save(t,"c:/temp/t3.xml")
+
+testit()
+
+

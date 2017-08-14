@@ -176,6 +176,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);##PREPROC##</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
+  <!--need 2 otherwise this doesn't appear as a list and extend/append won't work-->
   <ItemGroup>
     <ClCompile Include="##NO_FILE##" />
     <ClCompile Include="##NO_FILE2##" />
