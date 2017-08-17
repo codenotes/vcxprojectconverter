@@ -1,2 +1,2 @@
-#TargetFrameworkVersion=:PlatformToolSet=Clang_3_8:EnableManagedIncrementalBuild=:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=
+#TargetFrameworkVersion=:PlatformToolSet=Gcc_4_9:EnableManagedIncrementalBuild=:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=
 Debug|x86|C:\repos\vcxprojectconverter\|

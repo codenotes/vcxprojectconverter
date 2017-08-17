@@ -78,6 +78,7 @@ def addFiles(lib,files):
                 if f in excluded:
                     continue
                 else:
+              #      print '%file',f,files
                     x[u'ClCompile'].extend( [  OrderedDict([(u'@Include', f) ]  )] )  #must be at least 2 in template or extend won't work
 
     #remove the first 2 fake ##NO_FILE##
@@ -102,18 +103,18 @@ def addFiles(lib,files):
 #t['Project']['ItemGroup'][1]['ClCompile'], 2 ordered dictionaries
 #adding file, t['Project']['ItemGroup'][1]['ClCompile'].append( OrderedDict([(u'@Include', u'ThirdFile.cpp')]) )
 
-def setInclude(lib,target,includes):
-    for x in lib['Project']['ItemDefinitionGroup']:
-        s= x['@Condition'].split("==")[1][1:-1]
-        if(s==target):
-            x['ClCompile']['AdditionalIncludeDirectories']=includes
+#def setInclude(lib,target,includes):
+#    for x in lib['Project']['ItemDefinitionGroup']:
+#        s= x['@Condition'].split("==")[1][1:-1]
+#        if(s==target):
+#            x['ClCompile']['AdditionalIncludeDirectories']=includes
 
 
-def setPreProc_(lib,target,pres):
-    for x in lib['Project']['ItemDefinitionGroup']:
-        s= x['@Condition'].split("==")[1][1:-1]
-        if(s==target):
-            x['ClCompile']['PreprocessorDefinitions']=includes
+#def setPreProc_(lib,target,pres):
+#    for x in lib['Project']['ItemDefinitionGroup']:
+#        s= x['@Condition'].split("==")[1][1:-1]
+#        if(s==target):
+#            x['ClCompile']['PreprocessorDefinitions']=includes
 
 
 #for x in t['Project']['ItemGroup']:
@@ -127,7 +128,7 @@ def setPreProc_(lib,target,pres):
 #            print x[ u'ClCompile']['Include']
 
 
-def addDelimItemToList(source,item,replaceHolder, listType=None):
+def addDelimItemToList(source,item,replaceHolder, listType, target):
     #print '$$source:',source,"type:", listType,"item:",item
     l=source.split(";")
 
@@ -144,12 +145,11 @@ def addDelimItemToList(source,item,replaceHolder, listType=None):
       #  chain = itertools.chain(*tmp)
       #  print '1***new preproc',l,'remove:',no_transfer_preproc
       #item comes in ; delimited, so we need to split that
+        l.extend(add_transfer_preproc)  
+
         item=item.split(";")
-    #    print '1&&', item
         item=set(item)-set(no_transfer_preproc)
-     #   print '2&&', item
         item=";".join(item)
-      #  print '3&&', item
     elif listType=="includes":
         l=set(l)-set(no_transfer_includes)
         #print '---new includes',l
@@ -159,7 +159,7 @@ def addDelimItemToList(source,item,replaceHolder, listType=None):
     else:
         l = [w.replace(replaceHolder, item) for w in l]
 
-    
+    print listType,':',target,";".join(l)
     return ";".join(l)
 
 
@@ -173,7 +173,7 @@ def setPreProc(lib,target,preproc,  replaceHolder=True):
         if(s==target):
             pp=x['ClCompile']['PreprocessorDefinitions']
             #print '^^',preproc
-            test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor')
+            test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor',target)
 #            print '!!test!!',test
             x['ClCompile']['PreprocessorDefinitions']=test
             
@@ -183,7 +183,7 @@ def setInclude(lib,target,incl,replaceHolder=True):
         s= x['@Condition'].split("==")[1][1:-1]
         if(s==target):
             pp=x['ClCompile']['AdditionalIncludeDirectories']
-            x['ClCompile']['AdditionalIncludeDirectories']=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes')
+            x['ClCompile']['AdditionalIncludeDirectories']=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes',target)
 
 
 #getPreProc(t,p[1])
@@ -246,7 +246,7 @@ def doit(sourceproj, destproj, useMappedTargets=True):
                 setInclude(destproj,t,includesForTemplate[t])
                 setPreProc(destproj,t, preprocForTemplate[t])
     
-    print filesForTemplate
+    print 'filesToGo',filesForTemplate
     addFiles(destproj,filesForTemplate)
 
     return destproj
@@ -267,9 +267,11 @@ def testit(source, dest, file="c:/temp/t3.xml",useMap=True):
 win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
 androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
 expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
-template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml" 
+template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
 
 if __name__  == "__main__":
-    testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_android.vcxproj')
+    testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')
+
+
 
 

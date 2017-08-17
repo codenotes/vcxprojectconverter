@@ -1,7 +1,6 @@
-﻿  ANDROID_HOME=C:\NVPACK\android-sdk-windows
+﻿  ANDROID_HOME=C:\Program Files (x86)\Android\android-sdk
   ANT_HOME=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Apps\apache-ant-1.9.3
   JAVA_HOME=C:\Program Files (x86)\Java\jdk1.8.0_131
-  NDK_ROOT=C:\NVPACK\android-ndk-r12b
+  NDK_ROOT=C:\ProgramData\Microsoft\AndroidNDK64\android-ndk-r12b
   StaticLibrary1Android.cpp
-  C:\NVPACK\android-ndk-r12b\toolchains\x86-4.9\prebuilt\windows-x86_64\bin\i686-linux-android-ar.exe: creating C:\repos\vcxprojectconverter\x86\Debug\libStaticLibrary1Android.a
   StaticLibrary1Android.vcxproj -> C:\repos\vcxprojectconverter\x86\Debug\libStaticLibrary1Android.a

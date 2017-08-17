@@ -21,10 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="pysedtest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Win32ToAndroidConverter.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="template.xml" />
+    <Content Include="template_sed.xml" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
