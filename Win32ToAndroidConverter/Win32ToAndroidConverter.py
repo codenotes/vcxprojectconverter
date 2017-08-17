@@ -1,6 +1,9 @@
 import xmltodict
 import itertools
 from collections import OrderedDict
+import re
+
+
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
@@ -21,6 +24,12 @@ no_transfer_preproc=['WIN32','NDEBUG','_LIB','_DEBUG','%(PreprocessorDefinitions
 
 #items to insert special
 add_transfer_preproc=['HAVE_MEMMOVE']
+
+
+final_transfer_preproc={}
+final_transfer_includes={}
+final_transfer_files=[]
+
 
 def getProjectTypes(lib):
     configs=lib['Project']['ItemGroup'][0]['ProjectConfiguration']
@@ -159,7 +168,10 @@ def addDelimItemToList(source,item,replaceHolder, listType, target):
     else:
         l = [w.replace(replaceHolder, item) for w in l]
 
-    print listType,':',target,";".join(l)
+
+
+    #print listType,':',target,";".join(l)
+    
     return ";".join(l)
 
 
@@ -176,6 +188,7 @@ def setPreProc(lib,target,preproc,  replaceHolder=True):
             test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor',target)
 #            print '!!test!!',test
             x['ClCompile']['PreprocessorDefinitions']=test
+            final_transfer_preproc[target]=test
             
 
 def setInclude(lib,target,incl,replaceHolder=True):
@@ -183,8 +196,10 @@ def setInclude(lib,target,incl,replaceHolder=True):
         s= x['@Condition'].split("==")[1][1:-1]
         if(s==target):
             pp=x['ClCompile']['AdditionalIncludeDirectories']
-            x['ClCompile']['AdditionalIncludeDirectories']=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes',target)
-
+            tmp=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes',target)
+            x['ClCompile']['AdditionalIncludeDirectories']=tmp
+            final_transfer_includes[target]=tmp
+        
 
 #getPreProc(t,p[1])
 
@@ -247,6 +262,8 @@ def doit(sourceproj, destproj, useMappedTargets=True):
                 setPreProc(destproj,t, preprocForTemplate[t])
     
     print 'filesToGo',filesForTemplate
+    final_transfer_files=filesForTemplate
+
     addFiles(destproj,filesForTemplate)
 
     return destproj
@@ -268,6 +285,67 @@ win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.
 androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
 expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
 template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
+
+#for sed
+def filesToClCompileString(files):
+    fname_template="<ClCompile Include=%s />\n"
+    
+    def isList(fl):
+        s=''
+        for i in fl:
+            s+=fname_template%i
+        return s
+    
+    def isStr(fs):
+        if ';' in fs:
+            return isList( fs.split(';'))
+        else: #just a single file
+            return fname_template%files
+
+    switchDict = {list: isList, str: isStr}
+
+    return switchDict[type(files)](files)
+
+#for sed
+def includesOrPreprocToString(dirs, checkExists=False):
+
+    def isList(fl):
+        s=''
+        return ";".join(fl)
+    
+    def isStr(fs):
+        return fs
+
+    switchDict = {list: isList, str: isStr}
+    return switchDict[type(dirs)](dirs)
+
+def doSed(template,outproj):
+    text = open(template, "r").read()
+    f = open(outproj, "w")
+
+    #prp=includesOrPreprocToString(  final_transfer_preproc)
+    #final_transfer_includes
+    #final_transfer_files
+
+
+
+    return
+    prep="SOMEPREP"
+    inc="c:/sominclude"
+    files="file1;file2"
+
+
+    text = re.sub("\#\#PREPROC\#\#",prep,text)
+    text = re.sub("\#\#INCLUDE\#\#", inc,text)
+    text = re.sub("\#\#NO_FILE\#\#", files,text)
+
+    #text=prep.sub(prep, text)
+    #text=inc.sub(inc, text)
+    #text=files.sub(files, text)
+
+    f.write(text)
+    f.close()
+
 
 if __name__  == "__main__":
     testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')

@@ -121,8 +121,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);#INCLUDE_Debug|x64</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Debug|x64</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,8 +130,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);#INCLUDE_Release|x64</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Release|x64</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
@@ -139,8 +139,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);#INCLUDE_Debug|x86</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Debug|x86</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -148,8 +148,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);#INCLUDE_Release|x86</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Release|x86</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -157,8 +157,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);#INCLUDE_Debug|ARM64</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Debug|ARM64</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -166,8 +166,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);#INCLUDE_Release|ARM64</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Release|ARM64</PreprocessorDefinitions>
     </ClCompile>
     <BuildLog>
       <Path>$(IntDir)$(MSBuildProjectName).loggreg6</Path>
@@ -178,8 +178,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);#INCLUDE_Debug|ARM</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Debug|ARM</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -187,8 +187,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);##INCLUDE##</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>##PREPROC##</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories)%(AdditionalIncludeDirectories);#INCLUDE_Release|ARM</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>#PREPROC_Release|ARM</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
