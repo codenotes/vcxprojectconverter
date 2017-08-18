@@ -2,8 +2,8 @@ import xmltodict
 import itertools
 from collections import OrderedDict
 import re
-
-
+import pprint
+import os
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
 
@@ -25,7 +25,8 @@ no_transfer_preproc=['WIN32','NDEBUG','_LIB','_DEBUG','%(PreprocessorDefinitions
 #items to insert special
 add_transfer_preproc=['HAVE_MEMMOVE']
 
-
+all_transfer_targets_source={}
+all_transfer_targets_dest={}
 final_transfer_preproc={}
 final_transfer_includes={}
 final_transfer_files=[]
@@ -155,10 +156,12 @@ def addDelimItemToList(source,item,replaceHolder, listType, target):
       #  print '1***new preproc',l,'remove:',no_transfer_preproc
       #item comes in ; delimited, so we need to split that
         l.extend(add_transfer_preproc)  
+        
 
         item=item.split(";")
         item=set(item)-set(no_transfer_preproc)
         item=";".join(item)
+        
     elif listType=="includes":
         l=set(l)-set(no_transfer_includes)
         #print '---new includes',l
@@ -168,11 +171,12 @@ def addDelimItemToList(source,item,replaceHolder, listType, target):
     else:
         l = [w.replace(replaceHolder, item) for w in l]
 
-
-
+    
+    #remove empty from list
+    
     #print listType,':',target,";".join(l)
     
-    return ";".join(l)
+    return l#";".join(l)
 
 
 
@@ -186,9 +190,11 @@ def setPreProc(lib,target,preproc,  replaceHolder=True):
             pp=x['ClCompile']['PreprocessorDefinitions']
             #print '^^',preproc
             test=addDelimItemToList(pp,preproc, "##PREPROC##" if replaceHolder else '','preprocessor',target)
-#            print '!!test!!',test
+            #print '!!test!!',test
             x['ClCompile']['PreprocessorDefinitions']=test
+            test=[x for x in test if x]
             final_transfer_preproc[target]=test
+            
             
 
 def setInclude(lib,target,incl,replaceHolder=True):
@@ -205,16 +211,21 @@ def setInclude(lib,target,incl,replaceHolder=True):
 
 #assumption is that there is a 64 release and debug on win32 that we will use as our base
 def doit(sourceproj, destproj, useMappedTargets=True):
+    global final_transfer_files
+    global all_transfer_targets
+    global all_transfer_targets_source
+    global all_transfer_targets_dest
+
     st=getProjectTypes(sourceproj)
     sd=getProjectTypes(destproj)
     debMap={ u'Debug|x64': [u'Debug|ARM',  u'Debug|ARM64', u'Debug|x64',  u'Debug|x86'] }
     relMap={ u'Release|x64': [u'Release|ARM',  u'Release|ARM64', u'Release|x64',  u'Release|x86'] }
     
     commonTargets =list(set(st) & set (sd))
-    
-    
+    all_transfer_targets_source=commonTargets
     allTargets = st+sd
     destTargets=sd
+    all_transfer_targets_dest=destTargets
     #print 'common targets are:',commonTargets
 
     includesForTemplate={}
@@ -241,16 +252,18 @@ def doit(sourceproj, destproj, useMappedTargets=True):
             sf=getSourceFiles(sourceproj)
        
 
-    print 'includes (setInclude)',includesForTemplate
-    print 'preproc (setPreProc)',preprocForTemplate
-    print 'files (addFiles)',filesForTemplate
+    pprint.pprint( includesForTemplate)
+    pprint.pprint(preprocForTemplate)
+    pprint.pprint(filesForTemplate)
+
+    
 
     if useMappedTargets:
         for d in debMap[u'Debug|x64']: #all debug targets on dest
             setInclude(destproj,d,includesForTemplate[u'Debug|x64'])
             setPreProc(destproj,d,preprocForTemplate[u'Debug|x64'])
         for r in relMap[u'Release|x64']: #all release targets on dest
-            setInclude(destproj,r,includesForTemplate[u'Release|x64'])
+            setInclude(destproj,r,includesForTemplate[u'Release|x64'])            
             setPreProc(destproj,r,preprocForTemplate[u'Release|x64'])
             ##set everything EXCEPT files, because there is only one place where that is done in the XML
     else: #pair up only the targets that match
@@ -281,14 +294,9 @@ def testit(source, dest, file="c:/temp/t3.xml",useMap=True):
     save(t,file)
 
 
-win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
-androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
-expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
-template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
-
 #for sed
 def filesToClCompileString(files):
-    fname_template="<ClCompile Include=%s />\n"
+    fname_template="<ClCompile Include=\"%s\" />\n"
     
     def isList(fl):
         s=''
@@ -316,40 +324,100 @@ def includesOrPreprocToString(dirs, checkExists=False):
     def isStr(fs):
         return fs
 
-    switchDict = {list: isList, str: isStr}
+
+    switchDict = {list: isList, str: isStr, unicode: isStr}
     return switchDict[type(dirs)](dirs)
 
+
+#template is the sed-ready file, but we will ultimately duplicate it to outproj, not change it in place
 def doSed(template,outproj):
-    text = open(template, "r").read()
-    f = open(outproj, "w")
+    fin_string = open(template, "r").read()
+
+    fout = open(outproj, "w")
 
     #prp=includesOrPreprocToString(  final_transfer_preproc)
     #final_transfer_includes
     #final_transfer_files
+    print '--------------------------'
+    #pprint.pprint(final_transfer_files)
+    #pprint.pprint(final_transfer_includes)
+    #pprint.pprint( final_transfer_preproc)
 
+    files =filesToClCompileString(final_transfer_files)
 
+    for t in all_transfer_targets_dest:
+        inc= includesOrPreprocToString(final_transfer_includes[t])
+        prep= includesOrPreprocToString(final_transfer_preproc [t])
+       # print t,'preproc', '#PREPROC_'+t
+       # print t,'includes','#INCLUDE_'+t
 
-    return
-    prep="SOMEPREP"
-    inc="c:/sominclude"
-    files="file1;file2"
+        #replace string up intil the first < for the closing tag
+        fin_string = re.sub('\#PREPROC_'+t.replace('|','\|')+'[^<]*',prep,fin_string)
+      #  print '!1','\#PREPROC_'+t.replace('|','\|')+'[^<]*',prep
+        fin_string = re.sub('\#INCLUDE_'+t.replace('|','\|')+'[^<]*', inc,fin_string)
+       # print '!2','\#INCLUDE_'+t.replace('|','\|')+'[^<]*',inc
 
-
-    text = re.sub("\#\#PREPROC\#\#",prep,text)
-    text = re.sub("\#\#INCLUDE\#\#", inc,text)
-    text = re.sub("\#\#NO_FILE\#\#", files,text)
+    print 'files:',files
+    #print all_transfer_targets_source
+    #print all_transfer_targets_dest
+        
+    #prep="SOMEPREP"
+    #inc="c:/sominclude"
+    #files="file1;file2"
+    
+    
+    fin_string = re.sub('\#NO_FILE', files,fin_string)
 
     #text=prep.sub(prep, text)
     #text=inc.sub(inc, text)
     #text=files.sub(files, text)
 
-    f.write(text)
-    f.close()
+    fout.write(fin_string)
+    fout.close()
+
+
+
+win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
+androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
+expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
+template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
+template_sed="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template_sed.xml"
+expat_android="C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj"
+
+
+
 
 
 if __name__  == "__main__":
-    testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')
+    #testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')
+
+    w=load(expat)
+    t=load(template)
+  # t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"     
+  #  t=load(t)
+    doit(w,t)
+    doSed(template_sed,expat_android) #'c:\\temp\\sedtest.xml')
+
+
+expat_sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'
+
+def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'):
+    dir=os.path.dirname(sln)
+    print 'dir:', dir
+    os.chdir(dir)
+    fin_string = open(sln, "r").read()
+    l=fin_string.split('\n')
+    projects=[x for x in l if x[:7]=='Project']
+    for x in projects:
+        l=x.split(',')
+        fp=l[1].replace('"','')
+        pt=os.path.join(dir,fp)
+        rl=os.path.abspath(fp)
+        
+        rl=rl.replace(' ','')
+        print rl#,'++', l[1], pt
 
 
 
 
+   
