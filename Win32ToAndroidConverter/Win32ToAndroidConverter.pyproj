@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="template.xml" />
-    <Content Include="template_sed.xml" />
+    <Content Include="template_sed_static_library.xml" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

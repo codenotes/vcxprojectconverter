@@ -4,8 +4,40 @@ from collections import OrderedDict
 import re
 import pprint
 import os
+import ctypes
+
+kernel32 = ctypes.windll.kernel32
+kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+
+
+#static library template for android
+template_sed_static_library="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template_sed_static_library.xml"
+
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"
+
+RESET=   "\033[0m"
+RED=     "\033[31m"     
+GREEN=   "\033[32m"
+YELLOW = "\033[33m"      
+BLUE   = "\033[34m"      
+MAGENTA =   "\033[35m"      
+CYAN    =    "\033[36m"      
+WHITE    =   "\033[37m"      
+BOLDBLACK =  "\033[1m\033[30m"
+BOLDRED    = "\033[1m\033[31m"
+BOLDGREEN  = "\033[1m\033[32m"
+BOLDYELLOW = "\033[1m\033[33m"
+BOLDBLUE   = "\033[1m\033[34m"
+BOLDMAGENTA ="\033[1m\033[35m"
+BOLDCYAN    ="\033[1m\033[36m"
+BOLDWHITE   ="\033[1m\033[37m"
+INVERSEMAJ	="\033[45;7m" 
+INVERSEYELLOW	="\033[43;7m" 
+GREENBARWHITE	="\033[42;8m" 
+
+#define ESC "\x1b"
+#define CSI "\x1b["
 
 
 def load(s):
@@ -19,7 +51,7 @@ def save(doc, fname):
 
 #items not to carry over
 no_transfer_files=['stdafx.cpp']
-no_transfer_includes=['%(AdditionalIncludeDirectories)']
+no_transfer_includes=['%(AdditionalIncludeDirectories)',u'$(Sysroot)\\usr\\include',u'$(StlIncludeDirectories)%(AdditionalIncludeDirectories)',u'$(StlIncludeDirectories)']
 no_transfer_preproc=['WIN32','NDEBUG','_LIB','_DEBUG','%(PreprocessorDefinitions)','_USRDLL','_WINDOWS']
 
 #items to insert special
@@ -72,11 +104,41 @@ t=load(t)
 def getSourceFiles(lib):
     ll=[]
     for k in lib['Project']['ItemGroup']:
+       # print '1'
         if u'ClCompile' in k.keys():
-            for o in k['ClCompile']:
-                if '@Include' in o.keys():
-                    ll.append(o['@Include'])
+      #      print '2'
+          #  print type(k['ClCompile'])
+          #  for o in k['ClCompile']:
+     #           print 3, type(o), type(k['ClCompile'])
+
+                #t=type(o)
+            #if t==dict:
+            kc=k['ClCompile']
+            #print kc,type(kc)
+            if type(k['ClCompile']) in [unicode,str]:
+                if '@Include' in k['ClCompile']:#o.keys(): #assumes o is a list, won't be if there is only one file, fails here
+                #    print 4, k['ClCompile']['@Include']
+                    #ll.append(o['@Include'])
+                    ll.append(k['ClCompile']['@Include'])
+            elif type(k['ClCompile']) in [list]: #it is a list of ordered dictionaries, ie: [OrderedDict([(u'@Include', u'xmlparse.c')]), OrderedDict([(u'@Include', u'xmlrole.c')]), ...
+                for item in k['ClCompile']: #iterate through list of dictionaries
+                    #   print item['@Include'] #for a given dictionary, get the file out
+                    ll.append(item['@Include'])
+            elif type(kc) in [OrderedDict]:
+                for item in kc.keys():
+                    ll.append(kc['@Include'])
+                    
+
+            else:
+                print RED+"unknown type in getSourceFiles"+RESET,type(k['ClCompile'])
     return ll       
+     
+                #elif t==unicode:
+                #    print 'THING:',o, o['@Include']
+                #    exit()
+                #else:
+                #    RED+"unknown type for file"+RESET
+    #print 5
 
 def addFiles(lib,files):
     excluded= set(files) & set(no_transfer_files)
@@ -204,6 +266,7 @@ def setInclude(lib,target,incl,replaceHolder=True):
             pp=x['ClCompile']['AdditionalIncludeDirectories']
             tmp=addDelimItemToList(pp,incl, "##INCLUDE##" if replaceHolder else '', 'includes',target)
             x['ClCompile']['AdditionalIncludeDirectories']=tmp
+            print MAGENTA+'debg, include setting'+RESET,tmp
             final_transfer_includes[target]=tmp
         
 
@@ -332,7 +395,7 @@ def includesOrPreprocToString(dirs, checkExists=False):
 #template is the sed-ready file, but we will ultimately duplicate it to outproj, not change it in place
 def doSed(template,outproj):
     fin_string = open(template, "r").read()
-
+    print YELLOW+ 'Using template:' + RESET,GREEN+ template+RESET
     fout = open(outproj, "w")
 
     #prp=includesOrPreprocToString(  final_transfer_preproc)
@@ -344,7 +407,7 @@ def doSed(template,outproj):
     #pprint.pprint( final_transfer_preproc)
 
     files =filesToClCompileString(final_transfer_files)
-
+    magicReg='(?=\s*?\<)' #folowed by whitespace or <
     for t in all_transfer_targets_dest:
         inc= includesOrPreprocToString(final_transfer_includes[t])
         prep= includesOrPreprocToString(final_transfer_preproc [t])
@@ -352,12 +415,15 @@ def doSed(template,outproj):
        # print t,'includes','#INCLUDE_'+t
 
         #replace string up intil the first < for the closing tag
-        fin_string = re.sub('\#PREPROC_'+t.replace('|','\|')+'[^<]*',prep,fin_string)
-      #  print '!1','\#PREPROC_'+t.replace('|','\|')+'[^<]*',prep
-        fin_string = re.sub('\#INCLUDE_'+t.replace('|','\|')+'[^<]*', inc,fin_string)
-       # print '!2','\#INCLUDE_'+t.replace('|','\|')+'[^<]*',inc
+        prep=prep.replace('\\','\\\\')
+        fin_string = re.sub('\#PREPROC_'+t.replace('|','\|')+magicReg,prep,fin_string)
+        swap='\#INCLUDE_'+t.replace('|','\|')+magicReg #'[^<]*'
+        print RED+swap+RESET,GREEN+inc+RESET
+        inc=inc.replace('\\','\\\\')
+        fin_string = re.sub(swap, inc,fin_string)
+      
 
-    print 'files:',files
+    print YELLOW+'files:'+RESET,files,type(files)
     #print all_transfer_targets_source
     #print all_transfer_targets_dest
         
@@ -365,7 +431,7 @@ def doSed(template,outproj):
     #inc="c:/sominclude"
     #files="file1;file2"
     
-    
+    files=files.replace('\\','\\\\')
     fin_string = re.sub('\#NO_FILE', files,fin_string)
 
     #text=prep.sub(prep, text)
@@ -377,34 +443,10 @@ def doSed(template,outproj):
 
 
 
-win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
-androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
-expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
-template="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
-template_sed="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template_sed.xml"
-expat_android="C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj"
 
-
-
-
-
-if __name__  == "__main__":
-    #testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')
-
-    w=load(expat)
-    t=load(template)
-  # t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"     
-  #  t=load(t)
-    doit(w,t)
-    doSed(template_sed,expat_android) #'c:\\temp\\sedtest.xml')
-
-
-expat_sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'
-kinetic_sln='C:/ros/SolutionFiles/kinetic_complete_client.sln'
-
-
-def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'):
+def slnParse(sln):
     solutions=[]
+    map={}
     dir=os.path.dirname(sln)
     print 'dir:', dir
     os.chdir(dir)
@@ -414,8 +456,8 @@ def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln')
     for x in projects:
         l=x.split(',')
         fp=l[1].replace('"','')
-        pt=os.path.join(dir,fp)
-        rl=os.path.abspath(fp)
+        pt=os.path.join(dir,fp).replace('/','\\')
+        rl=os.path.abspath(fp).replace('/','\\')
         pt=pt.replace(' ','')
         rl=rl.replace(' ','')
         if os.path.isfile(rl):
@@ -425,12 +467,60 @@ def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln')
         else:
             print 'Neither is file:',pt,rl
     
-        print 'abs:',rl
-        print 'path:',pt
+      #  print 'abs:',rl
+     #   print 'path:',pt
 
     l=[x for x in solutions if not os.path.isfile(x)]
     print 'projects with bad paths:',l
-    return solutions
+    for p in solutions:
+        map[p]=p[:-8]+'_android.vcxproj'
+    
+    return map
+
+def processSlnAndCreateAndroidProjects(slnFile):
+    m=slnParse(slnFile)
+    pprint.pprint(m)
+    tem=load(template_main) #only need to load this once
+    for k in m.keys():
+        source=k
+        dest=m[k]
+        print 'Converting',GREEN+source+RESET,'to',MAGENTA+dest+RESET
+        src=load(source)
+        doit(src,tem) #read from template and write bullshit xml, but creates solution globals I use to sed later
+        doSed(template_sed_static_library,dest) #replace real template_sed arguments with pro, inc,files generated in doit() call. create new .vcxproj at 'dest'
+        exit() #temporary, I just wan to do one at a time
+
+
+
+win32proj="C:/repos/vcxprojectconverter/StaticLibrary1Win32/StaticLibrary1Win32.vcxproj"
+androidproj="C:/repos/vcxprojectconverter/StaticLibrary1Android/StaticLibrary1Android.vcxproj"
+expat="C:/repos/log4cxx/libexpat/expat/lib/expat_static.vcxproj"
+expat_android="C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj"
+
+#main template we want to use, though it has no purpose so not sure if needed anymore.  Old code used to modify this, but now its just legacy
+template_main="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template2.xml" 
+
+expat_sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'
+#this has just one clinclude file in it, so useful for testing
+only_one_file='C:/ros/gitsrc/roscpp_core/roscpp_serialization/buildit/roscpp_serialization.vcxproj'
+kinetic_sln='C:/ros/SolutionFiles/kinetic_complete_client.sln'
+
+if __name__  == "__main__":
+    #testit(expat,template,'C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.vcxproj')
+
+   # w=load(expat)
+   # t=load(template)
+  # t="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template.xml"     
+  #  t=load(t)
+    
+    #doit(w,t) #read from template and write bullshit xml
+    #doSed(template_sed,expat_android) #'c:\\temp\\sedtest.xml') #replace real template arguments with pro, inc,files generated in doit() call
+    processSlnAndCreateAndroidProjects(kinetic_sln)
+
+
+
+
+
 
 
 
