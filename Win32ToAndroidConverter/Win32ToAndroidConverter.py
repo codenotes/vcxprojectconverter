@@ -400,8 +400,11 @@ if __name__  == "__main__":
 
 
 expat_sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'
+kinetic_sln='C:/ros/SolutionFiles/kinetic_complete_client.sln'
+
 
 def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln'):
+    solutions=[]
     dir=os.path.dirname(sln)
     print 'dir:', dir
     os.chdir(dir)
@@ -413,10 +416,21 @@ def slnParse(sln='C:/repos/log4cxx/libexpat/expat/lib/expat_static_android.sln')
         fp=l[1].replace('"','')
         pt=os.path.join(dir,fp)
         rl=os.path.abspath(fp)
-        
+        pt=pt.replace(' ','')
         rl=rl.replace(' ','')
-        print rl#,'++', l[1], pt
+        if os.path.isfile(rl):
+            solutions.append(rl)
+        elif os.path.isfile(pt):
+            solutions.append(pt)
+        else:
+            print 'Neither is file:',pt,rl
+    
+        print 'abs:',rl
+        print 'path:',pt
 
+    l=[x for x in solutions if not os.path.isfile(x)]
+    print 'projects with bad paths:',l
+    return solutions
 
 
 
