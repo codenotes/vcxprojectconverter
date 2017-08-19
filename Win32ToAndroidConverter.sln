@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibrary1Android", "St
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticLibrary1Win32", "StaticLibrary1Win32\StaticLibrary1Win32.vcxproj", "{D163C6D6-5720-4F84-A6F8-2D9AD131F640}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roscpp_serialization_android", "..\..\ros\gitsrc\roscpp_core\roscpp_serialization\buildit\roscpp_serialization_android.vcxproj", "{60963F2A-EF03-30E1-BED3-6DAB415BF953}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,50 +165,6 @@ Global
 		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.RelWithDebInfo|x86.Build.0 = Release|Win32
 		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.RelWithDebInfo|x86-Android-NVIDIA.ActiveCfg = Release|x64
 		{D163C6D6-5720-4F84-A6F8-2D9AD131F640}.RelWithDebInfo|x86-Android-NVIDIA.Build.0 = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|ARM.ActiveCfg = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|ARM64.ActiveCfg = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|Tegra-Android.ActiveCfg = Debug|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|x64.ActiveCfg = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|x64.Build.0 = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|x86.ActiveCfg = Debug|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Debug|x86-Android-NVIDIA.ActiveCfg = Debug|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|Any CPU.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|Any CPU.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|ARM.ActiveCfg = Release|ARM
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|ARM.Build.0 = Release|ARM
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|ARM64.ActiveCfg = Release|ARM64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|ARM64.Build.0 = Release|ARM64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|Tegra-Android.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|Tegra-Android.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x64.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x64.Build.0 = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x86.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x86.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x86-Android-NVIDIA.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.MinSizeRel|x86-Android-NVIDIA.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|Any CPU.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|ARM.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|ARM64.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|Tegra-Android.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|x64.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|x64.Build.0 = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|x86.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.Release|x86-Android-NVIDIA.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|Any CPU.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|Any CPU.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|ARM.ActiveCfg = Release|ARM
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|ARM.Build.0 = Release|ARM
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|ARM64.ActiveCfg = Release|ARM64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|ARM64.Build.0 = Release|ARM64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|Tegra-Android.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|Tegra-Android.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x64.ActiveCfg = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x64.Build.0 = Release|x64
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x86.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x86.Build.0 = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x86-Android-NVIDIA.ActiveCfg = Release|x86
-		{60963F2A-EF03-30E1-BED3-6DAB415BF953}.RelWithDebInfo|x86-Android-NVIDIA.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,9 @@
 ﻿  ANDROID_HOME=C:\Program Files (x86)\Android\android-sdk
   ANT_HOME=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Apps\apache-ant-1.9.3
-  JAVA_HOME=C:\Program Files (x86)\Java\jdk1.8.0_131
+  JAVA_HOME=C:\Program Files (x86)\Java\jdk1.8.0_112
   NDK_ROOT=C:\ProgramData\Microsoft\AndroidNDK64\android-ndk-r12b
-  StaticLibrary1Android.cpp
-  StaticLibrary1Android.vcxproj -> C:\repos\vcxprojectconverter\x86\Debug\libStaticLibrary1Android.a
+  serialization.cpp
+..\..\..\ros\gitsrc\roscpp_core\roscpp_serialization\src\serialization.cpp(28,10): fatal error : 'ros/serialization.h' file not found
+  #include <ros/serialization.h>
+           ^
+  1 error generated.

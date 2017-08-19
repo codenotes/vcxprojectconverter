@@ -11,7 +11,7 @@ kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
 
 #static library template for android
-template_sed_static_library="C:/repos/vcxprojectconverter/Win32ToAndroidConverter/template_sed_static_library.xml"
+template_sed_static_library="C:/repos/vcxprojectconverter/StaticLibrary1Android/sed2.vcxproj"
 
 #win32proj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/Win32Project1/Win32Project1.vcxproj"
 #androidproj="C:/Users/gbrill/Documents/Visual Studio 2017/Projects/StaticLibrary1/StaticLibrary2android/StaticLibrary2android.vcxproj"

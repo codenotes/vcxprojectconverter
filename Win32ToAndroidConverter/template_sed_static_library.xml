@@ -42,7 +42,6 @@
     <ApplicationType>Android</ApplicationType>
     <ApplicationTypeRevision>2.0</ApplicationTypeRevision>
   </PropertyGroup>
-  <!--location 1-->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -148,7 +147,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);#INCLUDE_Release|x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Sysroot)\usr\include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories);C:\repos\vcxprojectconverter\StaticLibrary1Android\sed2.vcxprojRelease|x86</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>#PREPROC_Release|x86</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
